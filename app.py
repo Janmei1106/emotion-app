@@ -49,7 +49,7 @@ if uploaded_file:
                     {'<img src="' + row['圖片連結'] + '" style="width:100%; max-width:300px; border-radius:10px; margin-bottom:10px;">' if '圖片連結' in row and pd.notna(row['圖片連結']) else ''}
                     <p>🌟 <b>情緒：</b> <code>{row['情緒']}</code> ｜ 🎬 <b>情境：</b> <code>{row['情境']}</code></p>
                     <p>🔥 <b>點閱率：</b> {row['點閱率']}</p>
-                    <a href=\"{row['YouTube 連結']}\" target=\"_blank\">▶️ 前往 YouTube</a>
+                    <p><a href="{row['YouTube 連結']}" target="_blank">▶️ 前往 YouTube</a></p>
                 </div>
                 """, unsafe_allow_html=True)
 
