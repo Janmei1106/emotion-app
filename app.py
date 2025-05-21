@@ -19,7 +19,7 @@ if uploaded_file:
         df_exp = df_exp.assign(情境=df_exp['情境'].str.split('、')).explode('情境')
         df_exp['情緒'] = df_exp['情緒'].str.strip()
         df_exp['情境'] = df_exp['情境'].str.strip()
-        
+
         #df_exp['點閱率'] = pd.to_numeric(df_exp['點閱率'], errors='coerce').fillna(0).astype(int)
 
 
@@ -44,7 +44,7 @@ if uploaded_file:
                 <div style='background-color: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 0 8px rgba(0,0,0,0.05);'>
                     <h4 style='margin-bottom: 5px;'>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h4>
                     <p>🌟 <b>情緒：</b> <code>{row['情緒']}</code> ｜ 🎬 <b>情境：</b> <code>{row['情境']}</code></p>
-                    <p>🔥 <b>點閱率：</b> {row['點閱率']:,}</p>
+                    <p>🔥 <b>點閱率：</b> {row['點閱率']}</p>
                     <a href='{row['YouTube 連結']}' target='_blank'>▶️ 前往 YouTube</a>
                 </div>
                 """, unsafe_allow_html=True)
