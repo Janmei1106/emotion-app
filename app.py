@@ -48,10 +48,10 @@ if uploaded_file:
                     st.markdown(f"📸 圖片連結：{row['圖片連結']}")
                     st.markdown(f"<img src='{row['圖片連結']}' width='300'>", unsafe_allow_html=True)
 
-                    # 接續原本的歌曲資訊顯示
-                    st.markdown(f"**🎵 {row['歌名']}** - {row['歌手']}")
-                    st.markdown(f"👉 情緒：`{row['情緒']}`｜情境：`{row['情境']}`｜點閱率：{row['點閱率']}")
-                    st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
+                # 接續原本的歌曲資訊顯示
+                st.markdown(f"**🎵 {row['歌名']}** - {row['歌手']}")
+                st.markdown(f"👉 情緒：`{row['情緒']}`｜情境：`{row['情境']}`｜點閱率：{row['點閱率']}")
+                st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
 
 
                 if '歌詞' in row and pd.notna(row['歌詞']):
