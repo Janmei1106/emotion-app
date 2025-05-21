@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-st.image("https://i.ytimg.com/vi/GCgvpwLNvtY/maxresdefault.jpg")  # 任意有效圖片網址
-
 st.set_page_config(page_title="歌曲情緒搜尋器", page_icon="🎵")
+st.image("https://i.ytimg.com/vi/GCgvpwLNvtY/maxresdefault.jpg")  # 任意有效圖片網址
 st.title("🎶 歌曲情緒與情境搜尋器")
 
 # 上傳 Excel 檔案
