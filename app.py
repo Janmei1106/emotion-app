@@ -31,8 +31,16 @@ if uploaded_file:
                  cols.append('圖片連結')
             if '歌詞' in df.columns:
                 cols.append('歌詞')
+# 動態決定要取出的欄位（防止欄位缺失報錯）
+cols = ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結']
+if '圖片連結' in df_exp.columns:
+    cols.append('圖片連結')
+if '歌詞' in df_exp.columns:
+    cols.append('歌詞')
 
-        result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][cols].drop_duplicates()
+# 取出資料
+result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][cols].drop_duplicates()
+
 
         ].drop_duplicates()
 
