@@ -42,7 +42,8 @@ if uploaded_file:
             for _, row in result.iterrows():
                 st.markdown("---")
                 if '圖片連結' in row and pd.notna(row['圖片連結']):
-                    st.image(row['圖片連結'], width=300)
+                    st.markdown(f"<img src='{row['圖片連結']}' width='300'>", unsafe_allow_html=True)
+
 
                 st.markdown(f"**🎵 {row['歌名']}** - {row['歌手']}")
                 st.markdown(f"👉 情緒：`{row['情緒']}`｜情境：`{row['情境']}`｜點閱率：{row['點閱率']}")
