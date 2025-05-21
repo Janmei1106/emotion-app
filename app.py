@@ -50,7 +50,14 @@ if uploaded_file:
 
                 # 接續原本的歌曲資訊顯示
                 st.markdown(f"<h3 style='margin-bottom: 0.2em;'>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h3>",unsafe_allow_html=True)
-                st.markdown(f"👉 情緒：`{row['情緒']}`｜情境：`{row['情境']}`｜點閱率：{row['點閱率']}")
+                st.markdown(
+                    f"🎭 <b>情緒：</b><code>{row['情緒']}</code> ｜ "
+                    f"🎬 <b>情境：</b><code>{row['情境']}</code> ｜ "
+                    f"🔥 <b>點閱率：</b>{row['點閱率']}",
+                    unsafe_allow_html=True
+                )
+
+
                 st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
 
 
