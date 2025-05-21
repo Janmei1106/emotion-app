@@ -26,7 +26,14 @@ if uploaded_file:
         scene = st.sidebar.selectbox("🎬 選擇情境", sorted(scene_options))
 
         result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][
-            ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結', '圖片連結', '歌詞']
+            cols = ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結']
+            if '圖片連結' in df.columns:
+                 cols.append('圖片連結')
+            if '歌詞' in df.columns:
+                cols.append('歌詞')
+
+        result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][cols].drop_duplicates()
+
         ].drop_duplicates()
 
         st.markdown("""
