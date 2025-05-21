@@ -7,7 +7,7 @@ st.markdown("""
     <hr>
 """, unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("📁 請上傳 Excel 檔案（含欄位：歌名、歌手、情緒、情境、點閱率、YouTube 連結）", type="xlsx")
+uploaded_file = st.file_uploader("📁 請上傳 Excel 檔案（含欄位：歌名、歌手、情緒、情境、點閱率、YouTube 連結、圖片連結、歌詞）", type="xlsx")
 
 if uploaded_file:
     try:
@@ -20,16 +20,13 @@ if uploaded_file:
         df_exp['情緒'] = df_exp['情緒'].str.strip()
         df_exp['情境'] = df_exp['情境'].str.strip()
 
-        #df_exp['點閱率'] = pd.to_numeric(df_exp['點閱率'], errors='coerce').fillna(0).astype(int)
-
-
         st.sidebar.header("🔍 請選擇條件")
         emotion = st.sidebar.selectbox("🎭 選擇情緒", sorted(df_exp['情緒'].unique()))
         scene_options = df_exp[df_exp['情緒'] == emotion]['情境'].unique()
         scene = st.sidebar.selectbox("🎬 選擇情境", sorted(scene_options))
 
         result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][
-            ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結']
+            ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結', '圖片連結', '歌詞']
         ].drop_duplicates()
 
         st.markdown("""
@@ -43,11 +40,16 @@ if uploaded_file:
                 st.markdown(f"""
                 <div style='background-color: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 0 8px rgba(0,0,0,0.05);'>
                     <h4 style='margin-bottom: 5px;'>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h4>
+                    {'<img src="' + row['圖片連結'] + '" style="width:100%; max-width:300px; border-radius:10px; margin-bottom:10px;">' if pd.notna(row['圖片連結']) else ''}
                     <p>🌟 <b>情緒：</b> <code>{row['情緒']}</code> ｜ 🎬 <b>情境：</b> <code>{row['情境']}</code></p>
                     <p>🔥 <b>點閱率：</b> {row['點閱率']}</p>
                     <a href='{row['YouTube 連結']}' target='_blank'>▶️ 前往 YouTube</a>
                 </div>
                 """, unsafe_allow_html=True)
+
+                if pd.notna(row['歌詞']):
+                    with st.expander("📝 點我看歌詞"):
+                        st.markdown(str(row['歌詞']).replace('\n', '<br>'), unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"❌ 發生錯誤：{e}")
