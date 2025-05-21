@@ -7,7 +7,7 @@ st.markdown("""
     <hr>
 """, unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("📁 請上傳 Excel 檔案（含欄位：歌名、歌手、情緒、情境、點閱率、YouTube 連結、圖片連結、歌詞）", type="xlsx")
+uploaded_file = st.file_uploader("📁 請上傳 Excel 檔案（含欄位：歌名、歌手、情緒、情境、點閱率、YouTube 連結）", type="xlsx")
 
 if uploaded_file:
     try:
@@ -25,15 +25,9 @@ if uploaded_file:
         scene_options = df_exp[df_exp['情緒'] == emotion]['情境'].unique()
         scene = st.sidebar.selectbox("🎬 選擇情境", sorted(scene_options))
 
-        # 動態決定要取出的欄位（防止欄位缺失報錯）
-        cols = ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結']
-        if '圖片連結' in df_exp.columns:
-            cols.append('圖片連結')
-        if '歌詞' in df_exp.columns:
-            cols.append('歌詞')
-
-        # 取出資料
-        result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][cols].drop_duplicates()
+        result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][
+            ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結']
+        ].drop_duplicates()
 
         st.markdown("""
         <h2 style='color: #FF6F61;'>🎧 符合的歌曲清單</h2>
@@ -44,20 +38,13 @@ if uploaded_file:
         else:
             for _, row in result.iterrows():
                 st.markdown(f"""
-<div style='background-color: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 0 8px rgba(0,0,0,0.05);'>
-    <h4 style='margin-bottom: 5px;'>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h4>
-    {'<img src="' + row['圖片連結'] + '" style="width:100%; max-width:300px; border-radius:10px; margin-bottom:10px;">' if '圖片連結' in row and pd.notna(row['圖片連結']) else ''}
-    <p>🌟 <strong>情緒：</strong> {row['情緒']} ｜ 🎬 <strong>情境：</strong> {row['情境']}</p>
-    <p>🔥 <strong>點閱率：</strong> {row['點閱率']}</p>
-    <p><a href="{row['YouTube 連結']}" target="_blank">▶️ 前往 YouTube</a></p>
-</div>
-""", unsafe_allow_html=True)
-
-
-
-                if '歌詞' in row and pd.notna(row['歌詞']):
-                    with st.expander("📝 點我看歌詞"):
-                        st.markdown(str(row['歌詞']).replace('\n', '<br>'), unsafe_allow_html=True)
+                    <div style='background-color: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 0 8px rgba(0,0,0,0.05);'>
+                        <h4 style='margin-bottom: 5px;'>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h4>
+                        <p>🌟 <strong>情緒：</strong> {row['情緒']} ｜ 🎬 <strong>情境：</strong> {row['情境']}</p>
+                        <p>🔥 <strong>點閱率：</strong> {row['點閱率']}</p>
+                        <p><a href="{row['YouTube 連結']}" target="_blank">▶️ 前往 YouTube</a></p>
+                    </div>
+                """, unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"❌ 發生錯誤：{e}")
