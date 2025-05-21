@@ -7,8 +7,6 @@ st.title("🎶 歌曲情緒與情境搜尋器")
 # 上傳 Excel 檔案
 uploaded_file = st.file_uploader("📁 請上傳 Excel 檔案（需包含：歌名、歌手、情緒、情境、點閱率、YouTube 連結、圖片連結、歌詞）", type="xlsx")
 cover_img = None  # 預設封面圖為空，先宣告變數
-if cover_img:
-    st.image(cover_img, use_column_width=True)
 
 if uploaded_file:
     try:
@@ -16,6 +14,13 @@ if uploaded_file:
         df = pd.read_excel(uploaded_file)
         st.success("✅ 成功讀取 Excel！")
         st.dataframe(df.head())
+
+        # 讀完再設定封面圖
+        if '圖片連結' in df.columns and pd.notna(df.iloc[0]['圖片連結']):
+            cover_img = df.iloc[0]['圖片連結']
+
+        if cover_img:
+            st.image(cover_img, use_column_width=True)
 
         # 拆分欄位
         df_exp = df.copy()
