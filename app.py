@@ -1,33 +1,72 @@
 import streamlit as st
 import pandas as pd
 
-# ✅ 必須是第一個指令
 st.set_page_config(page_title="歌曲情緒搜尋器", page_icon="🎵")
-
 st.title("🎶 歌曲情緒與情境搜尋器")
 
-# 📌 初始化封面圖片變數
-cover_img = None
-
 # 上傳 Excel 檔案
-uploaded_file = st.file_uploader("📁 請上傳 Excel 檔案（需包含：圖片連結欄位）", type="xlsx")
+uploaded_file = st.file_uploader("📁 請上傳 Excel 檔案（需包含：歌名、歌手、情緒、情境、點閱率、YouTube 連結、圖片連結、歌詞）", type="xlsx")
+cover_img = None  # 預設封面圖為空，先宣告變數
+if cover_img:
+    st.image(cover_img, use_column_width=True)
 
 if uploaded_file:
     try:
         # 讀取 Excel
         df = pd.read_excel(uploaded_file)
         st.success("✅ 成功讀取 Excel！")
+        st.dataframe(df.head())
 
-        # 若有「圖片連結」欄位，且第一首歌有圖片 → 當封面圖
+        # 拆分欄位
+        df_exp = df.copy()
+        df_exp = df_exp.assign(情緒=df_exp['情緒'].str.split('、')).explode('情緒')
+        df_exp = df_exp.assign(情境=df_exp['情境'].str.split('、')).explode('情境')
+        df_exp['情緒'] = df_exp['情緒'].str.strip()
+        df_exp['情境'] = df_exp['情境'].str.strip()
+
+        st.sidebar.header("🔍 請選擇條件")
+        emotion = st.sidebar.selectbox("🎭 選擇情緒", sorted(df_exp['情緒'].unique()))
+        scene_options = df_exp[df_exp['情緒'] == emotion]['情境'].unique()
+        scene = st.sidebar.selectbox("🎬 選擇情境", sorted(scene_options))
+
+        # 檢查欄位存在與否
+        cols = ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結']
+        # 從 Excel 第一筆抓圖片當封面
         if '圖片連結' in df.columns and pd.notna(df.iloc[0]['圖片連結']):
             cover_img = df.iloc[0]['圖片連結']
+        if '歌詞' in df_exp.columns:
+            cols.append('歌詞')
 
-        # ✅ 正式顯示封面圖（用 Excel 的第一首圖）
-        if cover_img:
-            st.image(cover_img, use_column_width=True)
+        result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][cols].drop_duplicates()
 
-        # 👉 繼續原本你的邏輯（拆欄位、顯示選單等等）
-        # （這段請保留你原本後面程式碼）
+        st.subheader("🎧 符合的歌曲")
+        if result.empty:
+            st.warning("❌ 找不到符合條件的歌曲")
+        else:
+            for _, row in result.iterrows():
+                st.markdown("---")
+    
+                # ✅ 插入這段來顯示圖片連結與除錯資訊
+                if '圖片連結' in row and pd.notna(row['圖片連結']):
+                    st.markdown(f"📸 圖片連結：{row['圖片連結']}")
+                    st.markdown(f"<img src='{row['圖片連結']}' width='300'>", unsafe_allow_html=True)
+
+                # 接續原本的歌曲資訊顯示
+                st.markdown(f"<h3 style='margin-bottom: 0.2em;'>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h3>",unsafe_allow_html=True)
+                st.markdown(
+                    f"🎭 <b>情緒：</b><code>{row['情緒']}</code> ｜ "
+                    f"🎬 <b>情境：</b><code>{row['情境']}</code> ｜ "
+                    f"🔥 <b>點閱率：</b>{row['點閱率']}",
+                    unsafe_allow_html=True
+                )
+
+
+                st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
+
+
+                if '歌詞' in row and pd.notna(row['歌詞']):
+                    with st.expander("📝 點我看歌詞"):
+                        st.markdown(str(row['歌詞']).replace('\n', '<br>'), unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"❌ 發生錯誤：{e}")
