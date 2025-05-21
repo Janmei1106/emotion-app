@@ -19,7 +19,8 @@ if uploaded_file:
         df_exp = df_exp.assign(情境=df_exp['情境'].str.split('、')).explode('情境')
         df_exp['情緒'] = df_exp['情緒'].str.strip()
         df_exp['情境'] = df_exp['情境'].str.strip()
-        df_exp['點閱率'] = pd.to_numeric(df_exp['點閱率'], errors='coerce').fillna(0).astype(int)
+        
+        #df_exp['點閱率'] = pd.to_numeric(df_exp['點閱率'], errors='coerce').fillna(0).astype(int)
 
 
         st.sidebar.header("🔍 請選擇條件")
