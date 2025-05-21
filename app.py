@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+st.image("https://i.ytimg.com/vi/GCgvpwLNvtY/maxresdefault.jpg")  # 任意有效圖片網址
+
 st.set_page_config(page_title="歌曲情緒搜尋器", page_icon="🎵")
 st.title("🎶 歌曲情緒與情境搜尋器")
 
@@ -41,13 +43,17 @@ if uploaded_file:
         else:
             for _, row in result.iterrows():
                 st.markdown("---")
+    
+                # ✅ 插入這段來顯示圖片連結與除錯資訊
                 if '圖片連結' in row and pd.notna(row['圖片連結']):
+                    st.markdown(f"📸 圖片連結：{row['圖片連結']}")
                     st.markdown(f"<img src='{row['圖片連結']}' width='300'>", unsafe_allow_html=True)
 
+                    # 接續原本的歌曲資訊顯示
+                    st.markdown(f"**🎵 {row['歌名']}** - {row['歌手']}")
+                    st.markdown(f"👉 情緒：`{row['情緒']}`｜情境：`{row['情境']}`｜點閱率：{row['點閱率']}")
+                    st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
 
-                st.markdown(f"**🎵 {row['歌名']}** - {row['歌手']}")
-                st.markdown(f"👉 情緒：`{row['情緒']}`｜情境：`{row['情境']}`｜點閱率：{row['點閱率']}")
-                st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
 
                 if '歌詞' in row and pd.notna(row['歌詞']):
                     with st.expander("📝 點我看歌詞"):
