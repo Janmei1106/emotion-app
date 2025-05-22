@@ -21,7 +21,7 @@ if uploaded_file:
         # 顯示封面圖（來自第一首歌）
         if '圖片連結' in df.columns and pd.notna(df.iloc[0]['圖片連結']):
             cover_img = df.iloc[0]['圖片連結']
-            st.image(cover_img, use_column_width=True)
+            st.image(cover_img, use_container_width=True)
 
         # 拆分情緒與情境欄位
         df_exp = df.copy()
