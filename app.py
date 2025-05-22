@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+
+st.set_page_config(page_title="歌曲情緒搜尋器", page_icon="🎵")
+st.title("🎶 歌曲情緒與情境搜尋器")
 st.markdown("""
     <style>
     body {
@@ -32,10 +35,6 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
-st.set_page_config(page_title="歌曲情緒搜尋器", page_icon="🎵")
-st.title("🎶 歌曲情緒與情境搜尋器")
-
 # 自訂按鈕樣式（圓角卡片風格）
 st.markdown("""
 <style>
