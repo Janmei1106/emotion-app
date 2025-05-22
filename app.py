@@ -64,7 +64,7 @@ if uploaded_file:
 
         # 設定封面圖片（第一張）
         if '圖片連結' in df.columns and pd.notna(df.iloc[0]['圖片連結']):
-            st.image(df.iloc[0]['圖片連結'], use_column_width=True)
+            st.image(cover_img, use_container_width=True)
 
         # 拆分欄位
         df_exp = df.copy()
