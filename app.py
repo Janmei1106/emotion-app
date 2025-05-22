@@ -3,6 +3,36 @@ import pandas as pd
 
 # 頁面設定
 st.set_page_config(page_title="歌曲情緒搜尋器", page_icon="🎵")
+# 加入粉藍漸層背景與 neumorphic 按鈕樣式
+st.markdown("""
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f7fa, #fbeaff);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .block-container {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        h1, h2, h3, h4 {
+            color: #4A90E2;
+        }
+        .stButton>button {
+            background-color: #E1EFFF;
+            color: #4A90E2;
+            border: none;
+            border-radius: 12px;
+            padding: 0.6em 1.2em;
+            box-shadow: 4px 4px 10px #d0d0d0, -4px -4px 10px #ffffff;
+            transition: all 0.2s ease-in-out;
+        }
+        .stButton>button:hover {
+            background-color: #cde3ff;
+            transform: scale(1.03);
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title("🎶 歌曲情緒與情境搜尋器")
 
 # 上傳 Excel 檔案
