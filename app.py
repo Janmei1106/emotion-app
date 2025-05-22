@@ -83,11 +83,11 @@ if uploaded_file:
             st.warning("❌ 找不到符合條件的歌曲")
         else:
             for _, row in result.iterrows():
-                st.markdown("---")
-
-                # 圖片（若有）
-                if '圖片連結' in row and pd.notna(row['圖片連結']):
-                    st.markdown(f"<img src='{row['圖片連結']}' width='300' style='border-radius: 15px;'>", unsafe_allow_html=True)
+                st.markdown(
+                    f"<img src='{row['圖片連結']}' width='300' "
+                    f"style='border-radius: 20px; box-shadow: 8px 8px 20px rgba(0,0,0,0.1); margin-bottom: 10px;'>",
+                    unsafe_allow_html=True
+                )
 
                 # 歌曲資訊
                 st.markdown(
