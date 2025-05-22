@@ -57,7 +57,7 @@ if uploaded_file:
 
                 # 圖片（若有）
                 if '圖片連結' in row and pd.notna(row['圖片連結']):
-                    st.markdown(f"<img src='{row['圖片連結']}' width='300'>", unsafe_allow_html=True)
+                    st.markdown(f"<img src='{row['圖片連結']}' width='300' style='border-radius: 15px;'>", unsafe_allow_html=True)
 
                 # 歌曲資訊
                 st.markdown(
