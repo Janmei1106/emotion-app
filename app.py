@@ -13,7 +13,7 @@ st.markdown("""
         background: white;
         border-radius: 16px;
         padding: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        box-shadow: none;
         margin-bottom: 20px;
     }
     button[kind="secondary"] {
