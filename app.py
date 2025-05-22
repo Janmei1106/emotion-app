@@ -1,5 +1,37 @@
 import streamlit as st
 import pandas as pd
+st.markdown("""
+    <style>
+    body {
+        background: linear-gradient(120deg, #e0f7fa, #e1bee7);
+        font-family: 'Segoe UI', sans-serif;
+    }
+    section.main > div {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+    }
+    button[kind="secondary"] {
+        background: linear-gradient(90deg, #bbdefb, #e1bee7) !important;
+        color: #333 !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        height: 42px !important;
+        margin: 2px 0px !important;
+        transition: all 0.3s ease-in-out;
+    }
+    button[kind="secondary"]:hover {
+        background: linear-gradient(90deg, #90caf9, #ce93d8) !important;
+        color: black !important;
+        transform: scale(1.03);
+    }
+    h3 {
+        color: #3949ab;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 st.set_page_config(page_title="歌曲情緒搜尋器", page_icon="🎵")
 st.title("🎶 歌曲情緒與情境搜尋器")
