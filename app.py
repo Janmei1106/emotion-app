@@ -62,6 +62,10 @@ if uploaded_file:
         df = pd.read_excel(uploaded_file)
         st.success("✅ 成功讀取 Excel！")
 
+        # 設定封面圖片（第一張）
+        if '圖片連結' in df.columns and pd.notna(df.iloc[0]['圖片連結']):
+            st.image(cover_img, use_container_width=True)
+
         # 拆分欄位
         df_exp = df.copy()
         df_exp['情緒'] = df_exp['情緒'].str.split('、')
@@ -70,46 +74,56 @@ if uploaded_file:
         df_exp['情緒'] = df_exp['情緒'].str.strip()
         df_exp['情境'] = df_exp['情境'].str.strip()
 
-        # === 情緒卡片（主頁選擇）===
-        st.header("🎭 請選擇一個情緒")
-        all_emotions = sorted(df_exp['情緒'].dropna().unique())
-        emotion_cols = st.columns(len(all_emotions))
-        for i, emo in enumerate(all_emotions):
-            if emotion_cols[i].button(emo, key=f"emo_btn_{emo}"):
+        # 🎛️ 左側選單：情緒選擇（雙欄）
+        # 情緒按鈕卡片（多列分行）
+st.header("🎭 請選擇一個情緒")
+cols_per_row = 4
+for i in range(0, len(all_emotions), cols_per_row):
+    cols = st.columns(cols_per_row)
+    for j in range(cols_per_row):
+        if i + j < len(all_emotions):
+            emo = all_emotions[i + j]
+            if cols[j].button(emo, key=f"btn_{emo}"):
                 st.session_state.chosen_emotion = emo
 
-        # === 已選情緒 → 顯示情境下拉選單 ===
-        if 'chosen_emotion' in st.session_state:
-            chosen_emotion = st.session_state.chosen_emotion
-            st.subheader(f"🔍 已選情緒：{chosen_emotion}")
 
-            scene_options = sorted(df_exp[df_exp['情緒'] == chosen_emotion]['情境'].dropna().unique())
-            scene = st.selectbox("🎬 請選擇對應情境", scene_options)
+        emotion = st.session_state.chosen_emotion
+        scene_options = df_exp[df_exp['情緒'] == emotion]['情境'].unique()
+        scene = st.sidebar.selectbox("🎬 選擇情境", sorted(scene_options))
 
-            # 篩選符合情緒與情境
-            result = df_exp[(df_exp['情緒'] == chosen_emotion) & (df_exp['情境'] == scene)].drop_duplicates()
+        # 📊 篩選結果
+        cols = ['歌名', '歌手', '情緒', '情境', '點閱率', 'YouTube 連結']
+        if '圖片連結' in df_exp.columns:
+            cols.append('圖片連結')
+        if '歌詞' in df_exp.columns:
+            cols.append('歌詞')
 
-            st.subheader("🎧 符合的歌曲")
-            if result.empty:
-                st.warning("❌ 找不到符合條件的歌曲")
-            else:
-                for _, row in result.iterrows():
-                    st.markdown("---")
-                    if '圖片連結' in row and pd.notna(row['圖片連結']):
-                        st.markdown(f"<img src='{row['圖片連結']}' class='song-cover'>", unsafe_allow_html=True)
+        result = df_exp[(df_exp['情緒'] == emotion) & (df_exp['情境'] == scene)][cols].drop_duplicates()
 
-                    st.markdown(f"<h3>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h3>", unsafe_allow_html=True)
-                    st.markdown(
-                        f"🎭 <b>情緒：</b><code>{row['情緒']}</code> ｜ "
-                        f"🎬 <b>情境：</b><code>{row['情境']}</code> ｜ "
-                        f"🔥 <b>點閱率：</b>{row['點閱率']}",
-                        unsafe_allow_html=True
-                    )
-                    st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
+        st.subheader("🎧 符合的歌曲")
+        if result.empty:
+            st.warning("❌ 找不到符合條件的歌曲")
+        else:
+            for _, row in result.iterrows():
+                st.markdown("---")
+                # 圖片
+                if '圖片連結' in row and pd.notna(row['圖片連結']):
+                    st.markdown(f"<img src='{row['圖片連結']}' class='song-cover'>", unsafe_allow_html=True)
 
-                    if '歌詞' in row and pd.notna(row['歌詞']):
-                        with st.expander("📝 點我看歌詞"):
-                            st.markdown(str(row['歌詞']).replace('\n', '<br>'), unsafe_allow_html=True)
+                # 歌曲資訊
+                st.markdown(f"<h3>🎵 <b>{row['歌名']}</b> - <i>{row['歌手']}</i></h3>", unsafe_allow_html=True)
+                st.markdown(
+                    f"🎭 <b>情緒：</b><code>{row['情緒']}</code> ｜ "
+                    f"🎬 <b>情境：</b><code>{row['情境']}</code> ｜ "
+                    f"🔥 <b>點閱率：</b>{row['點閱率']}",
+                    unsafe_allow_html=True
+                )
+                st.markdown(f"[▶️ 點我聽歌]({row['YouTube 連結']})")
+
+                # 歌詞
+                if '歌詞' in row and pd.notna(row['歌詞']):
+                    with st.expander("📝 點我看歌詞"):
+                        st.markdown(str(row['歌詞']).replace('\n', '<br>'), unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"❌ 發生錯誤：{e}")
